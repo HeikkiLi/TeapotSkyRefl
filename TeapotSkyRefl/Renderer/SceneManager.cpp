@@ -26,7 +26,7 @@ struct CB_PS_PER_OBJECT
 
 
 SceneManager::SceneManager() : mSceneVertexShaderCB(NULL), mScenePixelShaderCB(NULL), mSceneVertexShader(NULL), mSceneVSLayout(NULL), mCamera(NULL),
-mScenePixelShader(NULL)
+mScenePixelShader(NULL), mSky(NULL)
 {
 }
 
@@ -45,6 +45,12 @@ bool SceneManager::Init(ID3D11Device* device, Camera* camera)
 	MeshData meshData;
 	if (!ObjLoader::Instance()->LoadToMesh("..\\Assets\\teapot.obj",  "..\\Assets\\", meshData))
 		return false;
+
+	Material material;
+	material.Diffuse = XMFLOAT4(0.8f, 0.2f, 0.1f, 1.0f);
+	material.specExp = 10.0f;
+	material.specIntensivity = 1.0f;
+	meshData.materials[0] = material;
 
 	Mesh* mesh = new Mesh();
 	mesh->Create(device, meshData);
@@ -112,6 +118,9 @@ bool SceneManager::Init(ID3D11Device* device, Camera* camera)
 
 	mCamera = camera;
 
+	// Create the Sky object
+	mSky = new Sky(device, "sky", 5000);
+
 	return true;
 }
 
@@ -134,6 +143,8 @@ void SceneManager::Release()
 	SAFE_RELEASE(mSceneVertexShader);
 	SAFE_RELEASE(mSceneVSLayout);
 	SAFE_RELEASE(mScenePixelShader);
+
+	SAFE_DELETE(mSky);
 }
 
 
@@ -233,4 +244,23 @@ void SceneManager::RenderSceneNoShaders(ID3D11DeviceContext * pd3dImmediateConte
 		mMeshes[i]->Render(pd3dImmediateContext);
 	}
 
+}
+
+void SceneManager::RenderSky(ID3D11DeviceContext* pd3dImmediateContext, XMVECTOR sunDirection, XMVECTOR sunColor)
+{
+	if (mSky)
+	{
+		// TODO sun direction
+		mSky->Render(pd3dImmediateContext, mCamera);
+	}
+
+}
+
+void SceneManager::RotateObjects(float dx, float dy, float dz)
+{
+	for (Mesh* mesh : mMeshes)
+	{
+		XMMATRIX matRot = XMMatrixRotationRollPitchYaw(dx, dy, dz);
+		mesh->mWorld *= matRot;
+	}
 }

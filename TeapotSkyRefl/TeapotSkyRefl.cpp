@@ -105,8 +105,8 @@ DeferredShaderApp::DeferredShaderApp(HINSTANCE hInstance)
 	mVisualizeLightVolume = false;
 
 	// init light values
-	mAmbientLowerColor = XMVectorSet(0.1f, 0.2f, 0.1f, 1.0f);
-	mAmbientUpperColor = XMVectorSet(0.1f, 0.2f, 0.2f, 1.0f);
+	mAmbientLowerColor = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
+	mAmbientUpperColor = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLightDir = XMVectorSet(-0.1, -0.4f, -0.9f, 1.0f);
 	mDirLightColor = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
 	mDirCastShadows = true;
@@ -389,6 +389,11 @@ void DeferredShaderApp::Render()
 	// do lighting
 	mLightManager.DoLighting(md3dImmediateContext, &mGBuffer, mCamera);
 
+	// TODO reflection from cubemap here? or in ^ lighting
+
+	// Render the sky
+	mSceneManager.RenderSky(md3dImmediateContext, mDirLightDir, 2.0f * mDirLightColor);
+
 	// Add the light sources wireframe on top of the LDR target
 	if (mVisualizeLightVolume)
 	{
@@ -458,12 +463,13 @@ void DeferredShaderApp::OnMouseMove(WPARAM btnState, int x, int y)
 	if ((btnState & MK_RBUTTON) != 0)
 	{
 		// Each pixel correspond to a quarter of a degree.
-		float dx = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
-		float dy = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
+		float dx = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
+		float dy = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
+		float dz = 0.0f;
+
 
 		// Rotate the teapot model
-		mCamera->Pitch(dy);
-		mCamera->RotateY(dx);
+		mSceneManager.RotateObjects(-dx, -dy, -dz);
 	}
 	else if ((btnState & MK_MBUTTON) != 0 && ( x != mLastMousePos.x && y != mLastMousePos.y) )
 	{
@@ -580,47 +586,27 @@ void DeferredShaderApp::RenderGUI()
 			ImGui::SetWindowPos(ImVec2(10, 60), ImGuiSetCond_FirstUseEver);
 
 			ImGui::Spacing();
-			if (ImGui::CollapsingHeader("Lights"))
-			{
-				if (ImGui::CollapsingHeader("Directional"))
-				{
-					ImGui::Text("Color:");
-					static ImVec4 color = ImColor(mDirLightColor.m128_f32[0], mDirLightColor.m128_f32[1], mDirLightColor.m128_f32[2]);
-					ImGui::ColorEdit3("DirLightColor##dcol1", (float*)&color, ImGuiColorEditFlags_NoLabel);
 
-					mDirLightColor = XMLoadFloat3(&XMFLOAT3((float*)&color));
+			ImGui::Text("Directional Light");
+			
+			ImGui::Text("Color:");
+			static ImVec4 color = ImColor(mDirLightColor.m128_f32[0], mDirLightColor.m128_f32[1], mDirLightColor.m128_f32[2]);
+			ImGui::ColorEdit3("DirLightColor##dcol1", (float*)&color, ImGuiColorEditFlags_NoLabel);
+			mDirLightColor = XMLoadFloat3(&XMFLOAT3((float*)&color));
+			ImGui::Checkbox("Shadows##dirshadow", &mDirCastShadows); 
+			
+			ImGui::Text("Material");
+			Mesh* mesh = mSceneManager.GetMesh(0);
+			Material mat = mesh->mMaterials[0];
+			
+			XMFLOAT4 diffuse = mat.Diffuse;
+			static ImVec4 difcolor = ImColor(diffuse.x, diffuse.y, diffuse.z);
+			ImGui::ColorEdit3("Diffuse Color##matcol1", (float*)& difcolor, ImGuiColorEditFlags_NoLabel);
+			mat.Diffuse = XMFLOAT4((float*)& difcolor);
+			ImGui::SliderFloat("SpecExp", &mat.specExp, 0.1f, 100.0f, "%.3f");
+			ImGui::SliderFloat("SpecInt", &mat.specIntensivity, 0.1f, 100.0f, "%.3f");	
+			mesh->mMaterials[0] = mat;
 
-					ImGui::Checkbox("Shadows##dirshadow", &mDirCastShadows); 
-					ImGui::Checkbox("Visualize Cascades##vcascades", &mVisualizeCascades);
-					ImGui::Checkbox("Antiflicker", &mAntiFlickerOn);
-				}
-
-				
-			}
-
-			if (ImGui::CollapsingHeader("Ambient Colors"))
-			{
-				ImGui::TextWrapped("Hemispheric ambient values for up and lower ambient color.\n\n");
-
-				ImGui::Text("Upper color:");
-				static ImVec4 colorAUp = ImColor(mAmbientUpperColor.m128_f32[0], mAmbientUpperColor.m128_f32[1], mAmbientUpperColor.m128_f32[2]);
-				ImGui::ColorEdit3("AmbientUpperColor##1", (float*)&colorAUp, ImGuiColorEditFlags_NoLabel);
-
-				mAmbientUpperColor = XMLoadFloat3(&XMFLOAT3((float*)&colorAUp));
-
-				ImGui::Text("Lower color:");
-				static ImVec4 colorALower = ImColor(mAmbientLowerColor.m128_f32[0], mAmbientLowerColor.m128_f32[1], mAmbientLowerColor.m128_f32[2]);
-				ImGui::ColorEdit3("AmbientLowerColor##1", (float*)&colorALower, ImGuiColorEditFlags_NoLabel);
-
-				mAmbientLowerColor = XMLoadFloat3(&XMFLOAT3((float*)&colorALower));
-			}
-			if (ImGui::CollapsingHeader("Camera"))
-			{
-				float campos[3] = { mCamera->GetPosition().x, mCamera->GetPosition().y, mCamera->GetPosition().z };
-				ImGui::SliderFloat3("position##campos", campos, -50.0f, 50.0f);
-				mCamera->SetPosition(XMFLOAT3((float*)& campos));
-
-			}
 
 			ImGui::Checkbox("FrameStats (F1)", &mShowRenderStats);
 			ImGui::Checkbox("Visualize Buffers (F2)", &mVisualizeGBuffer);

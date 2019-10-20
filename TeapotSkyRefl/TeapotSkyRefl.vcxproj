@@ -160,6 +160,7 @@
     <ClCompile Include="..\3rdParty\imgui\imgui.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Renderer\Sky.cpp" />
     <ClCompile Include="TeapotSkyRefl.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -196,6 +197,7 @@
     <ClInclude Include="Renderer\Mesh.h" />
     <ClInclude Include="Renderer\ObjLoader.h" />
     <ClInclude Include="Renderer\SceneManager.h" />
+    <ClInclude Include="Renderer\Sky.h" />
     <ClInclude Include="Renderer\TextureManager.h" />
     <ClInclude Include="Renderer\Util.h" />
   </ItemGroup>

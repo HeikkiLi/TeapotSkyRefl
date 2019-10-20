@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Mesh.h"
+#include "Sky.h"
 #include "Util.h"
 
 // SceneManager class
@@ -22,6 +23,12 @@ public:
 
 	// Renders the scene with no shaders
 	void RenderSceneNoShaders(ID3D11DeviceContext* pd3dImmediateContext);
+	
+	// Renders sky and sun
+	void RenderSky(ID3D11DeviceContext* pd3dImmediateContext, XMVECTOR sunDirection, XMVECTOR sunColor);
+
+	void RotateObjects(float dx, float dy, float dz);
+	Mesh* GetMesh(int index) { return mMeshes[index]; }
 
 private:
 
@@ -38,4 +45,6 @@ private:
 	ID3D11PixelShader* mScenePixelShader;
 
 	Camera* mCamera;
+
+	Sky* mSky;
 };

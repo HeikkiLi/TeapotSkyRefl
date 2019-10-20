@@ -16,6 +16,8 @@ public:
 
 	void CreateGrid(float width, float depth, UINT m, UINT n, MeshData& meshData);
 
+	void CreateSphere(float radius, UINT sliceCount, UINT stackCount, MeshData& meshData);
+
 private:
 	GeometryGenerator();
 	~GeometryGenerator();
