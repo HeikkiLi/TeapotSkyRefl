@@ -119,7 +119,11 @@ bool SceneManager::Init(ID3D11Device* device, Camera* camera)
 	mCamera = camera;
 
 	// Create the Sky object
-	mSky = new Sky(device, "sky", 5000);
+	mSky = new Sky();
+	if (!mSky->Init(device, "..\\Assets\\approaching_storm_1k.dds", 5000))
+	{
+		return false;
+	}
 
 	return true;
 }

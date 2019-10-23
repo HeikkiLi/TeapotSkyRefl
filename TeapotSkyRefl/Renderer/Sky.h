@@ -7,8 +7,10 @@ class Camera;
 class Sky
 {
 public:
-	Sky(ID3D11Device* device, const std::string& cubemapFilename, float skySphereRadius);
+	Sky();
 	~Sky();
+
+	bool Init(ID3D11Device* device, const std::string& cubemapFilename, float skySphereRadius);
 
 	ID3D11ShaderResourceView* CubeMapSRV();
 

@@ -154,6 +154,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\3rdParty\DirectXTex\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="..\3rdParty\DirectXTex\ScreenGrab\ScreenGrab.cpp" />
     <ClCompile Include="..\3rdParty\DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
     <ClCompile Include="..\3rdParty\DirectXTK\SimpleMath.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Renderer\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdParty\DirectXTex\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="..\3rdParty\DirectXTex\ScreenGrab\ScreenGrab.h" />
     <ClInclude Include="..\3rdParty\DirectXTex\WICTextureLoader\WICTextureLoader.h" />
     <ClInclude Include="..\3rdParty\DirectXTK\pch.h" />

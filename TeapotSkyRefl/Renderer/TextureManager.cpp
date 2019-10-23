@@ -1,6 +1,7 @@
 #include "TextureManager.h"
 
 #include "../DirectXTex/WICTextureLoader/WICTextureLoader.h"
+#include "DirectXTex/DDSTextureLoader/DDSTextureLoader.h"
 
 TextureManager *TextureManager::mInstance = 0;
 
@@ -46,8 +47,19 @@ ID3D11ShaderResourceView* TextureManager::CreateTexture(std::string filename)
 		{
 			ID3D11Resource* texture = 0;
 			std::wstring wstrFilename = std::wstring(filename.begin(), filename.end());
-			DirectX::CreateWICTextureFromFile(md3dDevice, wstrFilename.c_str(), &texture, &srv);
-			
+
+			size_t pos = 0;
+			pos = filename.find_last_of('.');
+			std::string strEnding = filename.substr(pos, filename.length());
+
+			if (strEnding == ".dds")
+			{
+				DirectX::CreateDDSTextureFromFile(md3dDevice, wstrFilename.c_str(), &texture, &srv);
+			}
+			else {
+				DirectX::CreateWICTextureFromFile(md3dDevice, wstrFilename.c_str(), &texture, &srv);
+			}
+
 			mTextureSRVs[filename] = srv;
 		}
 

@@ -614,6 +614,9 @@ void DeferredShaderApp::RenderGUI()
 			ImGui::TextWrapped("\nToggle settings window (F11)");
 			ImGui::TextWrapped("\nSave screenshot (F4).\n\n");
 
+			ImGui::TextWrapped("RMB rotate teapot");
+			ImGui::TextWrapped("MMB rotate sun direction");
+
 			ImGui::End();
 		}
 

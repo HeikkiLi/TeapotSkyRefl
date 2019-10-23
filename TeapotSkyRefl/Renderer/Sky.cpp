@@ -3,11 +3,23 @@
 #include "GeometryGenerator.h"
 #include "TextureManager.h"
 
-Sky::Sky(ID3D11Device* device, const std::string& cubemapFilename, float skySphereRadius)
+Sky::Sky()
 {
+	mCubeMapSRV = NULL;
+	mIndexCount = 0;
+	mVB = NULL;
+	mIB = NULL;
+}
 
+bool Sky::Init(ID3D11Device* device, const std::string& cubemapFilename, float skySphereRadius)
+{
 	// load cubemap from file
 	mCubeMapSRV = TextureManager::Instance()->CreateTexture(cubemapFilename);
+
+	if (mCubeMapSRV == NULL)
+	{
+		return false;
+	}
 
 	MeshData sphere;
 	GeometryGenerator::Instance()->CreateSphere(skySphereRadius, 32, 32, sphere);
@@ -50,6 +62,11 @@ Sky::Sky(ID3D11Device* device, const std::string& cubemapFilename, float skySphe
 	iinitData.pSysMem = &indices16[0];
 
 	HR(device->CreateBuffer(&ibd, &iinitData, &mIB));
+
+
+	// TODO create Sky HLSL
+
+	return true;
 }
 
 Sky::~Sky()
