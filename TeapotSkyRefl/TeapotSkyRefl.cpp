@@ -358,15 +358,11 @@ void DeferredShaderApp::Render()
 	
 
 	// clear render target view
-	float clearColor[4] = { 0.4f, 0.4, 0.8, 0.0f };
+	float clearColor[4] = { 0.0, 0.0, 0.0, 0.0 };
 	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView, clearColor);
 
 	// clear depth stencil view
 	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
-
-	// world, projection, view matrix
-	XMMATRIX world = XMMatrixIdentity();
-	XMMATRIX worldViewProj = mCamera->ViewProj();
 
 	// Store depth state
 	ID3D11DepthStencilState* pPrevDepthState;
@@ -391,9 +387,11 @@ void DeferredShaderApp::Render()
 
 	// TODO reflection from cubemap here? or in ^ lighting
 
+
 	// Render the sky
 	mSceneManager.RenderSky(md3dImmediateContext, mDirLightDir, 2.0f * mDirLightColor);
 
+	
 	// Add the light sources wireframe on top of the LDR target
 	if (mVisualizeLightVolume)
 	{

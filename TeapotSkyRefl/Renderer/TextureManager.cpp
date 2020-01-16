@@ -55,6 +55,16 @@ ID3D11ShaderResourceView* TextureManager::CreateTexture(std::string filename)
 			if (strEnding == ".dds")
 			{
 				DirectX::CreateDDSTextureFromFile(md3dDevice, wstrFilename.c_str(), &texture, &srv);
+				/*
+				size_t maxsize = 0;
+				DDS_ALPHA_MODE* alphaMode = nullptr;
+				DirectX::CreateDDSTextureFromFileEx(md3dDevice, nullptr,
+					wstrFilename.c_str(),
+					maxsize,
+					D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, D3D11_RESOURCE_MISC_TEXTURECUBE,
+					false,
+					&texture, &srv, alphaMode);
+					*/
 			}
 			else {
 				DirectX::CreateWICTextureFromFile(md3dDevice, wstrFilename.c_str(), &texture, &srv);

@@ -196,5 +196,8 @@
     <None Include="Shaders\GBufferVisualize.hlsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\Sky.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

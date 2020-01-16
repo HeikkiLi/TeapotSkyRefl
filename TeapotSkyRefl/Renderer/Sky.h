@@ -28,4 +28,13 @@ private:
 	ID3D11ShaderResourceView* mCubeMapSRV;
 
 	UINT mIndexCount;
+
+	ID3D11Buffer* mSkyVertexShaderCB;
+
+	ID3D11VertexShader* mSkyVertexShader;
+	ID3D11InputLayout* mSkyVSLayout;
+	ID3D11PixelShader* mSkyPixelShader;
+
+	// No depth with sky stencil test
+	ID3D11DepthStencilState* mSkyNoDepthStencilMaskState;
 };
