@@ -188,7 +188,7 @@ void Sky::Render(ID3D11DeviceContext* deviceContext, const Camera* camera)
 	deviceContext->VSSetConstantBuffers(0, 1, &mSkyVertexShaderCB);
 
 	// set the cubemap shader resource view
-	deviceContext->PSSetShaderResources(0, 1, &mCubeMapSRV);
+	deviceContext->PSSetShaderResources(4, 1, &mCubeMapSRV);
 
 	
 	UINT stride = sizeof(XMFLOAT3);

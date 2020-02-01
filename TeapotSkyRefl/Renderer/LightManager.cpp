@@ -857,7 +857,7 @@ void LightManager::DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext)
 	// Set the cascaded shadow map if casting shadows
 	if (mDirCastShadows)
 	{
-		pd3dImmediateContext->PSSetShaderResources(4, 1, &mCascadedDepthStencilSRV);
+		pd3dImmediateContext->PSSetShaderResources(5, 1, &mCascadedDepthStencilSRV);
 	}
 
 	// Primitive settings

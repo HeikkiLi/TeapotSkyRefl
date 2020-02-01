@@ -1,4 +1,4 @@
-TextureCube gCubeMap : register(t0);
+#include "common.hlsl"
 
 cbuffer cbPerFrameVS : register(b0)
 {

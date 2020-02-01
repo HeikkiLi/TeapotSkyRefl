@@ -47,7 +47,7 @@ bool SceneManager::Init(ID3D11Device* device, Camera* camera)
 		return false;
 
 	Material material;
-	material.Diffuse = XMFLOAT4(0.8f, 0.2f, 0.1f, 1.0f);
+	material.Diffuse = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 	material.specExp = 10.0f;
 	material.specIntensivity = 1.0f;
 	meshData.materials[0] = material;
@@ -120,7 +120,7 @@ bool SceneManager::Init(ID3D11Device* device, Camera* camera)
 
 	// Create the Sky object
 	mSky = new Sky();
-	std::string skyfileName = "..\\Assets\\grasscube1024.dds"; // "..\\Assets\\approaching_storm_1k.dds";
+	std::string skyfileName = "..\\Assets\\grasscube1024.dds"; 
 	if (!mSky->Init(device, skyfileName, 5000))
 	{
 		return false;

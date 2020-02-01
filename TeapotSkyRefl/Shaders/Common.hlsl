@@ -6,6 +6,8 @@ Texture2D<float4> ColorSpecIntTexture	: register(t1);
 Texture2D<float3> NormalTexture			: register(t2);
 Texture2D<float4> SpecPowTexture		: register(t3);
 
+TextureCube gCubeMap                    : register(t4);
+
 // point sampler
 SamplerState PointSampler				: register(s1);
 

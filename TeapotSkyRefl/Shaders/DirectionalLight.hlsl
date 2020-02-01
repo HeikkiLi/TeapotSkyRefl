@@ -1,6 +1,6 @@
 #include "common.hlsl"
 
-Texture2DArray<float> CascadeShadowMapTexture : register(t4);
+Texture2DArray<float> CascadeShadowMapTexture : register(t5);
 
 // shader input/output structure
 cbuffer cbDirLight : register(b1)
@@ -21,6 +21,15 @@ static const float2 arrBasePos[4] =
 	float2(1.0, 1.0),
 	float2(-1.0, -1.0),
 	float2(1.0, -1.0),
+};
+
+SamplerState samAnisotropic
+{
+	Filter = ANISOTROPIC;
+	MaxAnisotropy = 4;
+
+	AddressU = WRAP;
+	AddressV = WRAP;
 };
 
 /////////////// Vertex shader
@@ -101,12 +110,21 @@ float3 CalcDirectional(float3 position, Material material, bool bUseShadow)
     float NDotL = dot(DirToLight, material.normal);
     float3 finalColor = DirLightColor.rgb * saturate(NDotL);
    
+	float3 normal = material.normal;
+
 	// Blinn specular
     float3 ToEye = EyePosition - position;
     ToEye = normalize(ToEye);
     float3 HalfWay = normalize(ToEye + DirToLight);
     float NDotH = saturate(dot(HalfWay, material.normal));
     finalColor += DirLightColor.rgb * pow(NDotH, material.specPow) * material.specIntensity;
+
+	// reflection from cubemap
+	float3 incident = -ToEye;
+	float3 reflectionVector = reflect(incident, normal);
+	float4 reflectionColor  = float4(0.8, 0.8, 0.8, 1.0) * gCubeMap.Sample(samAnisotropic, reflectionVector);
+
+	finalColor += reflectionColor.xyz;
 
 	// Shadows
 	float shadowAtt;

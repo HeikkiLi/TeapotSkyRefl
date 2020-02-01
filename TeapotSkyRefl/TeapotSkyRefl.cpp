@@ -109,7 +109,7 @@ DeferredShaderApp::DeferredShaderApp(HINSTANCE hInstance)
 	mAmbientUpperColor = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLightDir = XMVectorSet(-0.1, -0.4f, -0.9f, 1.0f);
 	mDirLightColor = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
-	mDirCastShadows = true;
+	mDirCastShadows = false;
 	mAntiFlickerOn = true;
 	mVisualizeCascades = false;
 
@@ -384,9 +384,6 @@ void DeferredShaderApp::Render()
 	
 	// do lighting
 	mLightManager.DoLighting(md3dImmediateContext, &mGBuffer, mCamera);
-
-	// TODO reflection from cubemap here? or in ^ lighting
-
 
 	// Render the sky
 	mSceneManager.RenderSky(md3dImmediateContext, mDirLightDir, 2.0f * mDirLightColor);
